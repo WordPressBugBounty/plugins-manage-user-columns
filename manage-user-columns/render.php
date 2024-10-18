@@ -38,7 +38,10 @@ if (!function_exists('dpk_muc_users_page_html')) {
 								<tr><td><label>Posts</label></td><td><input name="tgl_posts" type="checkbox" <?php echo $posts_chk; ?>></td></tr>
 								<tr><td><label>Registration Date</label></td><td><input name="tgl_reg" type="checkbox" <?php echo $reg_chk; ?>></td></tr>
 							</table>
-							<p><input type="submit" value="Save" name="save_muc_def"></p>
+							<p>
+								<?php wp_nonce_field('mj_muc_tgl_col_nonce'); ?>
+								<input type="submit" value="Save" name="save_muc_def">
+							</p>
 						</form>
 					</div>
 					<div class="newOne">
@@ -49,13 +52,15 @@ if (!function_exists('dpk_muc_users_page_html')) {
 								<tr><td><label for="col_id">User Meta Field</label></td><td><input type="text" name="col_id" id="col_id" placeholder="Type to search..." required=""></td></tr>
 								<tr><td></td><td><ul class="muc-search-sug"></ul></td></tr>
 							</table>
-							<p><input type="submit" name="save_muc_col" value="Add Column"></p>
+							<p>
+							<?php wp_nonce_field('mj_muc_add_col_nonce'); ?>
+							<input type="submit" name="save_muc_col" value="Add Column"></p>
 						</form>
 					</div>
 				</div>
 			</div>
 			<div style="display: none;">
-				<form action="" id="dlt_col_frm" method="POST"><input type="hidden" name="delt_col" id="delt_col"></form>
+				<form action="" id="dlt_col_frm" method="POST"><input type="hidden" name="delt_col" id="delt_col"><?php wp_nonce_field('mj_muc_dlt_col_nonce'); ?></form>
 			</div>
 		</div>
 		<script type="text/javascript">

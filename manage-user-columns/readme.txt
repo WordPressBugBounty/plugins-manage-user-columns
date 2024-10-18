@@ -1,10 +1,10 @@
 === Manage User Columns ===
 Contributors: deepakkite, mrking2201
 Donate link: https://ko-fi.com/deepak1992
-Tags: registration-date, user-column, filter, users, columns, registered, date
+Tags: registration-date, user-column, filter, users, columns
 Requires at least: 6.0
-Tested up to: 6.4.2
-Stable tag: 1.0.5
+Tested up to: 6.6.2
+Stable tag: 1.0.6
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -73,6 +73,10 @@ You can add filters with the [PRO version](https://www.mediajedi.com/product/man
 4. Easily delete custom columns
 
 == Changelog ==
+
+= 1.0.6 =
+* 2024-10-18
+* Improved security checks.
 
 = 1.0.5 =
 * 2023-08-16

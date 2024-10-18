@@ -2,7 +2,7 @@
 /**
 * Plugin Name: Manage User Columns
 * Description: This plugin allows you to manage columns under the users page in the WordPress admin area.
-* Version: 1.0.5
+* Version: 1.0.6
 * Author: Deepak Khokhar, Surender Khokhar
 * Author URI: https://www.mediajedi.com/
 * License: GPL+2
@@ -103,7 +103,7 @@ if (!function_exists('dpk_muc_modify_user_table_row')) {
 // Make our new columns sortable
 if (!function_exists('dpk_muc_allow_sorting')) {
 	function dpk_muc_allow_sorting( $columns ) {
-		$muc_cc = get_option('muc_custom_cols');
+		$muc_cc = get_option('muc_custom_cols', array());
 		$muc_cc['reg'] = 'Registration Date';
 		return wp_parse_args( $muc_cc, $columns );
 	}
@@ -140,66 +140,73 @@ if (!function_exists('dpk_muc_pre_sorting')) {
 // Save the submitted column details
 if (!function_exists('dpk_muc_users_page_loaded')) {
 	function dpk_muc_users_page_loaded() {
-		if(isset($_POST['save_muc_def'])) {
-			$muc_def_cols = ['username' => 0, 'name' => 0, 'email' => 0, 'role' => 0, 'posts' => 0, 'reg' => 0];
+		
+		if ( is_user_logged_in() && current_user_can( 'manage_options' ) ) {
 			
-			if(isset($_POST['tgl_uname'])){
-				$tgl_username = filter_var($_POST['tgl_uname'], FILTER_SANITIZE_STRING);
-				if($tgl_username == 'on'){
-					$muc_def_cols['username'] = 1;
+			if(isset($_POST['save_muc_def']) && isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'mj_muc_tgl_col_nonce' ) ) {
+				$muc_def_cols = ['username' => 0, 'name' => 0, 'email' => 0, 'role' => 0, 'posts' => 0, 'reg' => 0];
+				
+				if(isset($_POST['tgl_uname'])){
+					$tgl_username = filter_var($_POST['tgl_uname'], FILTER_SANITIZE_STRING);
+					if($tgl_username == 'on'){
+						$muc_def_cols['username'] = 1;
+					}
+				}
+				if(isset($_POST['tgl_name'])){
+					$tgl_name = filter_var($_POST['tgl_name'], FILTER_SANITIZE_STRING);
+					if($tgl_name == 'on'){
+						$muc_def_cols['name'] = 1;
+					}
+				}
+				if(isset($_POST['tgl_email'])){
+					$tgl_email = filter_var($_POST['tgl_email'], FILTER_SANITIZE_STRING);
+					if($tgl_email == 'on'){
+						$muc_def_cols['email'] = 1;
+					}
+				}
+				if(isset($_POST['tgl_role'])){
+					$tgl_role = filter_var($_POST['tgl_role'], FILTER_SANITIZE_STRING);
+					if($tgl_role == 'on'){
+						$muc_def_cols['role'] = 1;
+					}
+				}
+				if(isset($_POST['tgl_posts'])){
+					$tgl_posts = filter_var($_POST['tgl_posts'], FILTER_SANITIZE_STRING);
+					if($tgl_posts == 'on'){
+						$muc_def_cols['posts'] = 1;
+					}
+				}
+				if(isset($_POST['tgl_reg'])){
+					$tgl_reg = filter_var($_POST['tgl_reg'], FILTER_SANITIZE_STRING);
+					if($tgl_reg == 'on'){
+						$muc_def_cols['reg'] = 1;
+					}
+				}
+				update_option('muc_def_cols', $muc_def_cols);
+			} 
+			else if(isset($_POST['save_muc_col']) && isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'mj_muc_add_col_nonce' ) && isset($_POST['col_name']) && isset($_POST['col_id'])) {
+				if($_POST['col_name'] != '' && $_POST['col_id'] != ''){ // validate submitted column details
+					$col_id = sanitize_text_field($_POST['col_id']); // sanitize submitted column_id
+					$col_name = sanitize_text_field($_POST['col_name']); // sanitize submitted column_name
+					$new_col = [$col_id => $col_name];
+					$old_cols = get_option('muc_custom_cols');
+					if($old_cols){
+						$new_col = array_merge($old_cols, $new_col); // add new column details with old column details
+					}
+					if($new_col){ // update option only if we have the proper new column value
+						update_option('muc_custom_cols', $new_col);
+					}
 				}
 			}
-			if(isset($_POST['tgl_name'])){
-				$tgl_name = filter_var($_POST['tgl_name'], FILTER_SANITIZE_STRING);
-				if($tgl_name == 'on'){
-					$muc_def_cols['name'] = 1;
+			else if(isset($_POST['delt_col']) && isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'mj_muc_dlt_col_nonce' )){
+				if($_POST['delt_col'] != ''){ // check if col_id was sent properly
+					$col_id = sanitize_text_field($_POST['delt_col']);
+					$old_cols = get_option('muc_custom_cols');
+					unset($old_cols[$col_id]);
+					update_option('muc_custom_cols', $old_cols);
 				}
 			}
-			if(isset($_POST['tgl_email'])){
-				$tgl_email = filter_var($_POST['tgl_email'], FILTER_SANITIZE_STRING);
-				if($tgl_email == 'on'){
-					$muc_def_cols['email'] = 1;
-				}
-			}
-			if(isset($_POST['tgl_role'])){
-				$tgl_role = filter_var($_POST['tgl_role'], FILTER_SANITIZE_STRING);
-				if($tgl_role == 'on'){
-					$muc_def_cols['role'] = 1;
-				}
-			}
-			if(isset($_POST['tgl_posts'])){
-				$tgl_posts = filter_var($_POST['tgl_posts'], FILTER_SANITIZE_STRING);
-				if($tgl_posts == 'on'){
-					$muc_def_cols['posts'] = 1;
-				}
-			}
-			if(isset($_POST['tgl_reg'])){
-				$tgl_reg = filter_var($_POST['tgl_reg'], FILTER_SANITIZE_STRING);
-				if($tgl_reg == 'on'){
-					$muc_def_cols['reg'] = 1;
-				}
-			}
-			update_option('muc_def_cols', $muc_def_cols);
-		} else if(isset($_POST['save_muc_col']) && isset($_POST['col_name']) && isset($_POST['col_id'])) {
-			if($_POST['col_name'] != '' && $_POST['col_id'] != ''){ // validate submitted column details
-				$col_id = sanitize_text_field($_POST['col_id']); // sanitize submitted column_id
-				$col_name = sanitize_text_field($_POST['col_name']); // sanitize submitted column_name
-				$new_col = [$col_id => $col_name];
-				$old_cols = get_option('muc_custom_cols');
-				if($old_cols){
-					$new_col = array_merge($old_cols, $new_col); // add new column details with old column details
-				}
-				if($new_col){ // update option only if we have the proper new column value
-					update_option('muc_custom_cols', $new_col);
-				}
-			}
-		} else if(isset($_POST['delt_col'])){
-			if($_POST['delt_col'] != ''){ // check if col_id was sent properly
-				$col_id = sanitize_text_field($_POST['delt_col']);
-				$old_cols = get_option('muc_custom_cols');
-				unset($old_cols[$col_id]);
-				update_option('muc_custom_cols', $old_cols);
-			}
+			
 		}
 	}
 }

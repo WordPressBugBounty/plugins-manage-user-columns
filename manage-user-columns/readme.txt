@@ -3,7 +3,7 @@ Contributors: deepakkite, mrking2201
 Donate link: https://ko-fi.com/deepak1992
 Tags: registration-date, user-column, filter, users, columns
 Requires at least: 6.0
-Tested up to: 6.6.2
+Tested up to: 6.8.1
 Stable tag: 1.0.6
 Requires PHP: 7.4
 License: GPLv2 or later

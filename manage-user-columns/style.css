@@ -51,14 +51,14 @@ th.manage-column{
 	margin-left: 5px;
 	cursor: pointer;
 }
-.tooltip {
+.dlt-col.tooltip {
   position: relative;
-  display: inline-block;
+  display: inline-block !important;
 }
 .dlt-col.tooltip:after{
 	display: none;
 }
-.tooltip .tooltiptext {
+.dlt-col.tooltip .tooltiptext {
   visibility: hidden;
   width: 120px;
   background-color: #555;
@@ -75,7 +75,7 @@ th.manage-column{
   transition: opacity 0.3s;
   font-size: 14px;
 }
-.tooltip .tooltiptext::after {
+.dlt-col.tooltip .tooltiptext::after {
   content: "";
   position: absolute;
   top: 100%;
@@ -85,7 +85,7 @@ th.manage-column{
   border-style: solid;
   border-color: #555 transparent transparent transparent;
 }
-.tooltip:hover .tooltiptext {
+.dlt-col.tooltip:hover .tooltiptext {
   visibility: visible;
   opacity: 1;
 }

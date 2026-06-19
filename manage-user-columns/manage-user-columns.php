@@ -2,7 +2,7 @@
 /**
 * Plugin Name: Manage User Columns
 * Description: This plugin allows you to manage columns under the users page in the WordPress admin area.
-* Version: 1.0.6
+* Version: 1.0.7
 * Author: Deepak Khokhar, Surender Khokhar
 * Author URI: https://www.mediajedi.com/
 * License: GPL+2
